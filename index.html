@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>종달샘 종합 웹서비스</title>
+  <title>종달샘 종합 웹서비스 (v2.0)</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://unpkg.com/qrcode@1.4.4/build/qrcode.min.js"></script>
   <style>
     @font-face {
       font-family: 'MoneygroRounded';
@@ -12,176 +13,70 @@
       font-display: swap;
     }
     body {
-      margin: 0;
-      background: #A9F5D0;
-      color: #009688;
+      margin: 0; background: #A9F5D0; color: #009688;
       font-family: 'MoneygroRounded', 'Noto Sans KR', sans-serif;
-      min-height: 100vh;
-      padding-bottom: 95px;
+      min-height: 100vh; padding-bottom: 95px;
     }
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 22px 4vw 0 4vw;
-      text-align: center;
-    }
-    .main-title {
-      margin: 24px 0 10px;
-      font-size: 2.08rem;
-      font-weight: 900;
-      color: #004D40;
-    }
-    .main-title span {
-      color: #FF6D1B;
-    }
-    .subtitle {
-      font-size: 1.12rem;
-      color: #009688;
-    }
-    .snack-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
-      gap: 22px;
-      margin: 28px 0 19px 0;
-    }
-    .snack-card {
-      background: #fff;
-      border-radius: 28px;
-      box-shadow: 0 4px 20px #004d4017;
-      padding: 26px 18px 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      border: 2.5px solid #FF6D1B;
-      min-width: 0;
-      transition: box-shadow .17s;
-    }
-    .snack-card:hover {
-      box-shadow: 0 8px 32px #ff6d1b1f;
-    }
-    .notice {
-      margin-top: 5px;
-      font-weight: 700;
-      font-size: 0.96em;
-      background: #A9F5D0;
-      color: #FF6D1B;
-      border: 1.5px solid #FF6D1B;
-      border-radius: 14px;
-      padding: 7px;
-      text-align: center;
-    }
-    .error-note {
-      margin: 15px auto;
-      padding: 10px 20px;
-      background: #ffe9e8;
-      color: #d03;
-      border-radius: 18px;
-      box-shadow: 0 3px 13px #f8cbcb40;
-      border: 2px solid #ff6d6d90;
-      font-size: 1.1em;
-      font-weight: 700;
-      display: none;
-    }
-    .footer {
-      background: #fff;
-      border-radius: 24px;
-      padding: 14px 0 15px;
-      text-align: center;
-      margin: 34px auto 0;
-      box-shadow: 0 2px 11px #004d400d;
-      border: 2px solid #FF6D1B;
-      max-width: 340px;
-    }
-    .menu {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 10px 0 15px 0;
-      justify-content: center;
-    }
-    .menu button {
-      min-width: 120px;
-      background: #FF6D1B;
-      color: #fff;
-      border: none;
-      border-radius: 14px;
-      padding: 10px 14px;
-      font-weight: bold;
-      font-size: 1em;
-      cursor: pointer;
-      margin: 0;
-      box-shadow: 0 2px 10px #ff6d1b19;
-      transition: background .14s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-    }
-    .menu button:disabled {
-      background: #bbb;
-    }
+    .container { max-width: 720px; margin: 0 auto; padding: 22px 4vw 0 4vw; text-align: center; }
+    .main-title { margin: 24px 0 10px; font-size: 2.08rem; font-weight: 900; color: #004D40; }
+    .main-title span { color: #FF6D1B; }
+    .subtitle { font-size: 1.12rem; color: #009688; }
     .card {
-      background: #fff;
-      border-radius: 28px;
-      box-shadow: 0 4px 20px #004d4017;
-      padding: 26px 18px;
-      margin: 22px auto 20px auto;
-      max-width: 95%;
-      position: relative;
-      border: 2.5px solid #FF6D1B;
-      text-align: center;
+      background: #fff; border-radius: 28px; box-shadow: 0 4px 20px #004d4017;
+      padding: 26px 18px; margin: 22px auto 20px auto; max-width: 95%;
+      position: relative; border: 2.5px solid #FF6D1B; text-align: center;
     }
-    input, textarea {
-      width: 90%;
-      margin: 8px auto;
-      padding: 10px;
-      border-radius: 16px;
-      border: 2px solid #FF6D1B;
-      font-family: inherit;
-      font-size: 1em;
+    .snack-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 22px; margin: 28px 0 19px 0; }
+    .snack-card {
+      background: #fff; border-radius: 28px; box-shadow: 0 4px 20px #004d4017;
+      padding: 26px 18px 18px; display: flex; flex-direction: column; align-items: center;
+      position: relative; border: 2.5px solid #FF6D1B; min-width: 0; transition: box-shadow .17s;
+    }
+    .snack-card:hover { box-shadow: 0 8px 32px #ff6d1b1f; }
+    .notice {
+      margin-top: 5px; font-weight: 700; font-size: 0.96em; background: #A9F5D0;
+      color: #FF6D1B; border: 1.5px solid #FF6D1B; border-radius: 14px;
+      padding: 7px; text-align: center;
+    }
+    .menu { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 15px 0; justify-content: center; }
+    .menu button {
+      min-width: 120px; background: #FF6D1B; color: #fff; border: none; border-radius: 14px;
+      padding: 10px 14px; font-weight: bold; font-size: 1em; cursor: pointer; margin: 0;
+      box-shadow: 0 2px 10px #ff6d1b19; transition: background .14s;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+    }
+    .menu button:disabled { background: #bbb; }
+    .menu button i { font-size: 1.2em; vertical-align: middle; }
+    input, textarea, select {
+      width: 90%; margin: 8px auto; padding: 10px; border-radius: 16px;
+      border: 2px solid #FF6D1B; font-family: inherit; font-size: 1em;
     }
     textarea { min-height: 90px; }
     .btn-action {
-      background: #FF6D1B;
-      color: #fff;
-      border: none;
-      border-radius: 16px;
-      padding: 12px 25px;
-      font-size: 1.05em;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 2px 10px #ff6d1b19;
-      transition: all .2s;
-      margin: 10px 0 4px 0;
+      background: #FF6D1B; color: #fff; border: none; border-radius: 16px; padding: 12px 25px;
+      font-size: 1.05em; font-weight: bold; cursor: pointer; box-shadow: 0 2px 10px #ff6d1b19;
+      transition: all .2s; margin: 10px 0 4px 0;
     }
     .btn-action:hover { background: #E65C00; }
     #qr-code {
-      margin: 15px auto;
-      width: 180px;
-      height: 180px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fff;
-      border-radius: 14px;
-      border: 2px solid #FF6D1B;
+      margin: 15px auto; width: 180px; height: 180px; display: flex; align-items: center;
+      justify-content: center; background: #fff; border-radius: 14px; border: 2px solid #FF6D1B;
     }
     .hidden { display: none; }
-    .history-item {
-      background: #E8F5E9;
-      padding: 10px 15px;
-      margin: 8px 0;
-      border-radius: 12px;
-      font-size: 1em;
+    .history-item { background: #E8F5E9; padding: 10px 15px; margin: 8px 0; border-radius: 12px; font-size: 1em; }
+    .cart-summary {
+      background: #fff; border-radius: 24px; padding: 14px 4vw; margin: 16px 0 10px 0;
+      box-shadow: 0 3px 13px #00968813; color: #004D40; font-size: 1.13em;
+      display: flex; align-items: center; flex-wrap: wrap; justify-content: center;
+      min-height: 44px; text-align: center; flex-direction: column;
     }
-    @media (max-width:900px) { .container { max-width: 99vw; } }
+    @media (max-width:900px) { .container {max-width:99vw;} }
     @media (max-width:600px) {
       .main-title { font-size:1.3rem; }
       .snack-list { grid-template-columns:1fr; gap:13px; margin:10px 0 15px 0; }
       .card { padding:16px 3vw; margin:12px auto; }
       .btn-action { width:90%; margin:10px auto; }
-      input, textarea { font-size:0.93em; width:95%; }
+      input, select, textarea { font-size:0.93em; width:95%; }
       #qr-code { width:150px; height:150px; }
     }
   </style>
@@ -190,12 +85,14 @@
   <div class="container">
     <div id="landing" class="card">
       <div class="main-title"><span>종달샘</span> JongDalSam</div>
-      <div class="subtitle">학번과 비밀번호로 회원가입 후 체험하세요!</div>
+      <div class="subtitle">모든 기록이 실시간으로 저장됩니다.</div>
       <div class="menu">
         <button onclick="showPanel('login')"><span class="material-icons">login</span> 로그인</button>
         <button onclick="showPanel('signup')"><span class="material-icons">person_add_alt</span> 회원가입</button>
       </div>
-      <div class="notice">이 페이지는 Google Apps Script(스프레드시트)와 실시간 연동됩니다.</div>
+      <div class="notice">
+        Google Apps Script와 연동된 웹서비스입니다.
+      </div>
     </div>
 
     <div id="login" class="card hidden">
@@ -204,7 +101,6 @@
       <input type="password" id="login-pw" placeholder="비밀번호" required>
       <button class="btn-action" onclick="login()">로그인</button>
       <button class="btn-action" onclick="showPanel('landing')">뒤로가기</button>
-      <div class="error-note" id="login-error"></div>
     </div>
 
     <div id="signup" class="card hidden">
@@ -213,348 +109,228 @@
       <input type="password" id="signup-pw" placeholder="비밀번호" required>
       <button class="btn-action" onclick="signup()">가입하기</button>
       <button class="btn-action" onclick="showPanel('landing')">뒤로가기</button>
-      <div class="error-note" id="signup-error"></div>
     </div>
 
     <div id="mypage" class="card hidden">
       <div class="main-title"><span>마이페이지</span></div>
-      <p>학번: <span id="current-id"></span></p>
-      <p>포인트: <span id="current-point"></span></p>
+      <p>학번: <b id="current-id"></b></p>
+      <p>포인트: <b id="current-point"></b></p>
       <div class="menu">
-        <button onclick="showPanel('coupon')"><span class="material-icons">confirmation_number</span>쿠폰 등록</button>
-        <button onclick="showPanel('letter')"><span class="material-icons">email</span>편지 쓰기</button>
-        <button onclick="showPanel('portfolio')"><span class="material-icons">assignment</span>포트폴리오</button>
-        <button onclick="showPanel('shop')"><span class="material-icons">shopping_cart</span>장바구니</button>
-        <button onclick="showPanel('landing')"><span class="material-icons">logout</span>로그아웃</button>
-        <button onclick="becomeUser('30401')" style="background:#2196f3;">
-          <span class="material-icons">account_circle</span>30401 체험
-        </button>
+        <button onclick="showPanel('coupon')"><span class="material-icons">confirmation_number</span>쿠폰</button>
+        <button onclick="showPanel('letter')"><span class="material-icons">email</span>편지</button>
+        <button onclick="showPanel('portfolio')"><span class="material-icons">assignment</span>기록</button>
+        <button onclick="showPanel('shop')"><span class="material-icons">shopping_cart</span>쇼핑</button>
+        <button onclick="logout()"><span class="material-icons">logout</span>로그아웃</button>
       </div>
     </div>
 
     <div id="coupon" class="card hidden">
-      <div class="main-title"><span>쿠폰 등록</span></div>
+      <div class="main-title"><span>쿠폰</span></div>
       <div id="qr-code"></div>
-      <input type="text" id="coupon-code" placeholder="쿠폰 번호 (12자리)" required>
-      <button class="btn-action" onclick="addCoupon()">쿠폰 등록하기</button>
-      <button class="btn-action" onclick="generateQR()">QR 코드 생성</button>
+      <input type="text" id="coupon-code" placeholder="쿠폰 번호를 입력하세요" required>
+      <button class="btn-action" onclick="addCoupon()">쿠폰 등록</button>
+      <button class="btn-action" onclick="generateQR()">QR 생성</button>
       <button class="btn-action" onclick="showPanel('mypage')">뒤로가기</button>
-      <div class="error-note" id="coupon-error"></div>
-      <div class="notice">쿠폰 등록 시 10포인트가 즉시 적립됩니다.</div>
+      <div class="notice">쿠폰 등록 시 10포인트가 적립됩니다.</div>
     </div>
 
     <div id="letter" class="card hidden">
       <div class="main-title"><span>편지 쓰기</span></div>
-      <input type="text" id="letter-to" placeholder="받는 이 학번 (예: 30123)" required>
+      <input type="text" id="letter-to" placeholder="받는 사람 학번" required>
       <textarea id="letter-content" placeholder="편지 내용을 입력하세요"></textarea>
-      <button class="btn-action" onclick="sendLetter()">편지 보내기</button>
+      <button class="btn-action" onclick="sendLetter()">보내기</button>
       <button class="btn-action" onclick="showPanel('mypage')">뒤로가기</button>
-      <div class="error-note" id="letter-error"></div>
-      <div class="notice">편지 1건당 1000포인트가 즉시 적립됩니다!</div>
+      <div class="notice">편지를 보내면 1000포인트가 적립됩니다!</div>
     </div>
 
     <div id="portfolio" class="card hidden">
-      <div class="main-title"><span>포트폴리오</span></div>
-      <div class="history-item">
-        <span class="material-icons">people</span> <b>쿠폰 교환</b> <span id="portfolio-coupons">0</span>회
-      </div>
-      <div class="history-item">
-        <span class="material-icons">email</span> <b>편지 교환</b> <span id="portfolio-letters">0</span>회
-      </div>
-      <div class="history-item">
-        <span class="material-icons">monetization_on</span> <b>누적 포인트</b> <span id="portfolio-point">0</span>점
-      </div>
-      <div class="history-item">
-        <span class="material-icons">event</span> <b>최근 활동</b> <span id="portfolio-recent">-</span>
-      </div>
+      <div class="main-title"><span>활동 기록</span></div>
+      <div class="history-item">쿠폰 교환: <b id="portfolio-coupons">0</b>회</div>
+      <div class="history-item">편지 교환: <b id="portfolio-letters">0</b>회</div>
+      <div class="history-item">누적 포인트: <b id="portfolio-point">0</b>점</div>
+      <div class="history-item">최근 활동 상대: <b id="portfolio-recent">-</b></div>
       <button class="btn-action" onclick="showPanel('mypage')">뒤로가기</button>
     </div>
 
     <div id="shop" class="card hidden">
-      <div class="main-title"><span>장바구니 (포인트 사용)</span></div>
-      <div class="subtitle">로그인이 필요합니다. 포인트로 결제됩니다.</div>
+      <div class="main-title"><span>포인트 상점</span></div>
       <div class="snack-list" id="snack-list">
-        <div class="snack-card">
-          <div class="snack-name">담요</div>
-          <div class="snack-price">1000점</div>
-          <div class="snack-stock">잔여: 5개</div>
-          <button class="snack-btn" onclick="addCart('담요')">+</button>
-        </div>
-        <div class="snack-card">
-          <div class="snack-name">도리토스</div>
-          <div class="snack-price">800점</div>
-          <div class="snack-stock">잔여: 10개</div>
-          <button class="snack-btn" onclick="addCart('도리토스')">+</button>
-        </div>
+        <!-- 쇼핑 기능은 UI만 있으며, 실제 상품 목록은 백엔드에서 가져와야 합니다. -->
       </div>
       <div class="cart-summary" id="cart-summary">장바구니가 비어 있습니다.</div>
-      <button class="btn-action" id="order-btn" disabled onclick="order()">예약하기</button>
+      <button class="btn-action" id="order-btn" onclick="order()" disabled>구매하기</button>
       <button class="btn-action" onclick="showPanel('mypage')">뒤로가기</button>
-      <div class="notice">포인트로 결제, 환불 불가</div>
-    </div>
-
-    <div class="footer">
-      <h3>학내 종달샘 아지트</h3>
-      <div class="contact-info">테스트용 Google Apps Script 연동 데모</div>
     </div>
   </div>
 
-  <script src="https://unpkg.com/qrcode@1.4.4/build/qrcode.min.js"></script>
-  <script>
-    // 백엔드 API 주소 (본인 Apps Script 배포 URL)
-    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzyK-2RADrc3_NqLXTP5VLGcpMXNmyJhwmbp6rQs2Jw7sJaDizd8bLK4mtvAdreNZxU/exec";
-    let currentStudentId = null;
-    let currentPoint = 0;
-    let cart = {};
+<script>
+// ================================================================
+//               백엔드(Google Apps Script) 연동 설정
+// ================================================================
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzyK-2RADrc3_NqLXTP5VLGcpMXNmyJhwmbp6rQs2Jw7sJaDizd8bLK4mtvAdreNZxU/exec";
+let currentStudentId = null;
+let currentPoint = 0;
+let cart = {}; // 쇼핑카트 (프론트엔드 임시 저장)
 
-    // 패널 보기/숨기기
-    function showPanel(panelName) {
-      document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
-      document.getElementById(panelName).classList.remove('hidden');
-      if (panelName === 'mypage') refreshMyPage();
-      else if (panelName === 'portfolio') loadPortfolio();
-      else if (panelName === 'shop') refreshMyPage();
-      hideAllErrors();
-    }
-    function hideAllErrors() {
-      document.querySelectorAll('.error-note').forEach(el => {
-        el.style.display = 'none';
-        el.textContent = '';
-      });
-    }
-    function showError(panel, message) {
-      hideAllErrors();
-      const el = document.getElementById(panel + '-error');
-      if (el) {
-        el.style.display = 'block';
-        el.textContent = message;
-      }
-      console.error(message);
-    }
+// ================================================================
+//                      아주 자세한 오류 핸들러
+// ================================================================
+function handleError(error, context) {
+  console.error(`[오류 발생] ${context}:`, error);
+  let userMessage = `처리 중 문제가 발생했습니다: [${context}]\n\n`;
 
-    // 마이페이지 포인트/학번 갱신
-    function refreshMyPage() {
-      if (!currentStudentId) return;
-      document.getElementById('current-id').textContent = currentStudentId;
-      document.getElementById('current-point').textContent = currentPoint;
-    }
+  if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+    userMessage += "네트워크 연결을 확인해주세요.\n\n" +
+      "가능한 원인:\n" +
+      "1. 인터넷 연결이 끊겼습니다.\n" +
+      "2. 서버(Google)가 일시적으로 응답하지 않습니다.\n" +
+      "3. 브라우저의 광고 차단기나 보안 프로그램이 요청을 막고 있을 수 있습니다.\n" +
+      "(개발자 참고: CORS 정책이 서버에 올바르게 설정되었는지 확인하세요.)";
+  } else if (error instanceof SyntaxError) {
+    userMessage += "서버로부터 예상치 못한 응답을 받았습니다.\n" +
+      "서버 스크립트에 문제가 있을 수 있으니, 개발자에게 문의해주세요.\n" +
+      "(개발자 참고: 서버가 유효한 JSON을 반환하지 않았습니다.)";
+  } else {
+    // 백엔드에서 보낸 에러 메시지가 있다면 그대로 보여줌
+    userMessage += error.message || "알 수 없는 오류가 발생했습니다.";
+  }
+  alert(userMessage);
+}
 
-    // 임시 체험 계정 로그인
-    function becomeUser(id) {
-      currentStudentId = id;
-      currentPoint = 100;
-      refreshMyPage();
-      showPanel('mypage');
-      hideAllErrors();
-      console.log(id + ' 님(체험 계정)으로 로그인했습니다.');
+// ================================================================
+//              백엔드 API 호출을 위한 중앙 함수
+// ================================================================
+async function callBackend(action, payload = {}) {
+  try {
+    const response = await fetch(WEBAPP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, ...payload })
+    });
+    if (!response.ok) {
+      throw new Error(`서버 응답 오류: ${response.status} ${response.statusText}`);
     }
+    const data = await response.json();
+    if (data.success === false) {
+      // 백엔드에서 명시적으로 실패를 보낸 경우
+      throw new Error(data.message || '서버에서 알 수 없는 오류가 발생했습니다.');
+    }
+    return data;
+  } catch (e) {
+    handleError(e, `${action} 작업`);
+    return null; // 실패 시 null 반환
+  }
+}
 
-    // 오류 메시지를 최대한 친절하게 출력하는 fetch
-    async function fetchWithError(url, options, panel) {
-      try {
-        const res = await fetch(url, options);
-        if (!res.ok) {
-          // 응답은 오지만 status가 비정상(400~599)
-          const data = await res.text();
-          const message = `${res.status} ${res.statusText}\n\n`;
-          try {
-            const json = JSON.parse(data);
-            if (json.message) return showError(panel, message + json.message);
-            if (json.error) return showError(panel, message + '서버 오류: ' + json.error);
-          } catch { }
-          return showError(panel, message + '서버 응답: ' + data);
-        }
-        return res;
-      } catch(e) {
-        // 네트워크 오류, 요청 실패
-        if (e.message === 'Failed to fetch') {
-          showError(panel, '🔴 인터넷 연결을 확인하세요!\n' +
-                         '- 브라우저가 인터넷에 잘 연결되어 있는지\n' +
-                         '- 방화벽/차단 소프트웨어가 구글 스크립트(script.google.com)를 차단하고 있지 않은지\n' +
-                         '- 혹시 잘못된 API 주소가 아닌지\n' +
-                         '반드시 직접 확인 후 다시 시도하세요.');
-        } else {
-          showError(panel, '알 수 없는 오류가 발생했습니다: ' + e.message + '\n크롬 개발자도구(F12) 콘솔을 확인하세요.');
-        }
-        throw e; // 오류 추가 처리를 위해 rethrow
-      }
-    }
+// ================================================================
+//                      페이지 및 기능별 함수
+// ================================================================
 
-    // 회원가입
-    async function signup() {
-      const id = document.getElementById('signup-id').value.trim();
-      const pw = document.getElementById('signup-pw').value.trim();
-      hideAllErrors();
-      if (!id || !pw) return showError('signup', '학번과 비밀번호를 모두 입력하세요');
-      try {
-        document.getElementById('signup-pw').value = '';
-        document.getElementById('signup-id').value = '';
-        const res = await fetchWithError(WEBAPP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'signup', studentId: id, password: pw })
-        }, 'signup');
-        const data = await res.json();
-        if (data.success) {
-          alert('회원가입 완료! 로그인해 주세요.');
-          showPanel('login');
-        } else {
-          showError('signup', '회원가입 실패: ' + (data.message || '이미 등록된 학번이거나 데이터 오류'));
-        }
-      } catch(e) {
-        // fetchWithError에서 이미 오류를 띄웠으므로 추가 알림은 하지 않음
-      }
-    }
+function showPanel(panelId) {
+  document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
+  document.getElementById(panelId).classList.remove('hidden');
+  if (panelId === 'mypage') refreshMyPageUI();
+  else if (panelId === 'portfolio') loadPortfolio();
+}
 
-    // 로그인
-    async function login() {
-      const id = document.getElementById('login-id').value.trim();
-      const pw = document.getElementById('login-pw').value.trim();
-      hideAllErrors();
-      if (!id || !pw) return showError('login', '학번과 비밀번호를 모두 입력하세요');
-      try {
-        document.getElementById('login-pw').value = '';
-        document.getElementById('login-id').value = '';
-        const res = await fetchWithError(WEBAPP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'login', studentId: id, password: pw })
-        }, 'login');
-        const data = await res.json();
-        if (data.success) {
-          currentStudentId = id;
-          currentPoint = data.data.point;
-          showPanel('mypage');
-          alert('로그인 성공!');
-        } else {
-          showError('login', '로그인 실패: ' + (data.message || '학번/비밀번호가 잘못되었거나, 등록되지 않은 계정입니다.'));
-        }
-      } catch(e) {
-        // fetchWithError에서 이미 오류를 띄웠으므로 추가 알림은 하지 않음
-      }
-    }
+function refreshMyPageUI() {
+  if (!currentStudentId) return;
+  document.getElementById('current-id').textContent = currentStudentId;
+  document.getElementById('current-point').textContent = currentPoint;
+}
 
-    // 쿠폰 등록
-    let qrCodeCurrent = '';
-    function generateQR() {
-      qrCodeCurrent = Math.random().toString(36).substring(2, 14).toUpperCase();
-      document.getElementById('qr-code').innerHTML = '';
-      new QRCode(document.getElementById('qr-code'), qrCodeCurrent);
-      document.getElementById('coupon-code').value = qrCodeCurrent;
-      hideAllErrors();
-    }
-    async function addCoupon() {
-      if (!currentStudentId) return showPanel('login');
-      const code = document.getElementById('coupon-code').value.trim();
-      hideAllErrors();
-      if (!code) return showError('coupon', '쿠폰 번호를 입력하세요');
-      try {
-        document.getElementById('coupon-code').value = '';
-        const res = await fetchWithError(WEBAPP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'add_coupon', studentId: currentStudentId, code: code, type: 'qr' })
-        }, 'coupon');
-        const data = await res.json();
-        if (data.success) {
-          currentPoint += 10;
-          refreshMyPage();
-          showPanel('mypage');
-          alert('쿠폰 등록 성공! 10포인트 적립');
-        } else {
-          showError('coupon', '쿠폰 등록 실패:\n' + (data.message || '이미 등록된 쿠폰이거나, 알 수 없는 오류입니다.'));
-        }
-      } catch(e) {
-        // fetchWithError에서 이미 오류를 띄웠으므로 추가 알림은 하지 않음
-      }
-    }
+function logout() {
+  currentStudentId = null;
+  currentPoint = 0;
+  showPanel('landing');
+}
 
-    // 편지 보내기 (1000포인트 적립)
-    async function sendLetter() {
-      if (!currentStudentId) return showPanel('login');
-      const toId = document.getElementById('letter-to').value.trim();
-      const content = document.getElementById('letter-content').value.trim();
-      hideAllErrors();
-      if (!toId || !content) return showError('letter', '받는 학번과 편지 내용을 모두 입력하세요');
-      try {
-        const res = await fetchWithError(WEBAPP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'send_letter', fromId: currentStudentId, toId: toId, content: content })
-        }, 'letter');
-        const data = await res.json();
-        if (data.success) {
-          currentPoint += 1000;
-          document.getElementById('letter-content').value = '';
-          document.getElementById('letter-to').value = '';
-          refreshMyPage();
-          alert('편지 전송 성공! 1000포인트 적립');
-          showPanel('mypage');
-        } else {
-          showError('letter', '편지 전송 실패:\n' + (data.message || '상대방이 없거나, 오류가 발생했습니다.'));
-        }
-      } catch(e) {
-        // fetchWithError에서 이미 오류를 띄웠으므로 추가 알림은 하지 않음
-      }
-    }
+async function signup() {
+  const studentId = document.getElementById('signup-id').value.trim();
+  const password = document.getElementById('signup-pw').value.trim();
+  if (!studentId || !password) return alert('학번과 비밀번호를 모두 입력하세요.');
 
-    // 포트폴리오 조회
-    async function loadPortfolio() {
-      if (!currentStudentId) return showPanel('login');
-      try {
-        const res = await fetch(WEBAPP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'portfolio', studentId: currentStudentId })
-        });
-        const data = await res.json();
-        if (data.success) {
-          document.getElementById('portfolio-coupons').textContent = data.data.coupons || 0;
-          document.getElementById('portfolio-letters').textContent = data.data.letters || 0;
-          document.getElementById('portfolio-point').textContent = data.data.point || 0;
-          document.getElementById('portfolio-recent').textContent = data.data.recent || '-';
-        } else {
-          alert('포트폴리오 불러오기 실패: ' + (data.message || '현재 활동 내역이 없습니다.'));
-        }
-      } catch(e) {
-        alert('포트폴리오 조회 중 오류: ' + (e.message || '네트워크를 확인하세요.'));
-        console.error(e);
-      }
-    }
+  const data = await callBackend('signup', { studentId, password });
+  if (data && data.success) {
+    alert('회원가입이 완료되었습니다. 이제 로그인해주세요.');
+    showPanel('login');
+    document.getElementById('signup-id').value = '';
+    document.getElementById('signup-pw').value = '';
+  }
+}
 
-    // 장바구니 (간단 구현)
-    function addCart(itemName) {
-      if (!currentStudentId) return showPanel('login');
-      cart[itemName] = (cart[itemName] || 0) + 1;
-      updateCart();
-    }
-    function updateCart() {
-      const cartEl = document.getElementById('cart-summary');
-      const items = Object.entries(cart).filter(([name, qty]) => qty > 0);
-      if (items.length === 0) {
-        cartEl.innerHTML = '장바구니가 비어 있습니다.';
-        document.getElementById('order-btn').disabled = true;
-      } else {
-        cartEl.innerHTML = items.map(([name, qty]) => `${name} × ${qty}`).join(', ');
-        document.getElementById('order-btn').disabled = false;
-      }
-    }
-    function order() {
-      if (!currentStudentId) return showPanel('login');
-      const total = Object.entries(cart).reduce((sum, [name, qty]) => 
-        sum + qty * (name === '담요' ? 1000 : 800), 0);
-      if (currentPoint < total) return alert('포인트가 부족합니다.');
-      if (confirm(`${total}포인트를 사용해 결제하시겠습니까?`)) {
-        alert('구매 완료! (실제로는 Apps Script에 주문 내역 전송 필요)');
-        currentPoint -= total;
-        cart = {};
-        updateCart();
-        refreshMyPage();
-      }
-    }
+async function login() {
+  const studentId = document.getElementById('login-id').value.trim();
+  const password = document.getElementById('login-pw').value.trim();
+  if (!studentId || !password) return alert('학번과 비밀번호를 모두 입력하세요.');
+  
+  const data = await callBackend('login', { studentId, password });
+  if (data && data.success) {
+    currentStudentId = studentId;
+    currentPoint = data.data.point;
+    showPanel('mypage');
+    document.getElementById('login-id').value = '';
+    document.getElementById('login-pw').value = '';
+  }
+}
 
-    // 시작 화면
-    window.addEventListener('load', () => showPanel('landing'));
-  </script>
+function generateQR() {
+  const code = Math.random().toString(36).substring(2, 14).toUpperCase();
+  document.getElementById('qr-code').innerHTML = '';
+  new QRCode(document.getElementById('qr-code'), code);
+  document.getElementById('coupon-code').value = code;
+}
+
+async function addCoupon() {
+  if (!currentStudentId) return showPanel('login');
+  const code = document.getElementById('coupon-code').value.trim();
+  if (!code) return alert('쿠폰 번호를 입력하세요.');
+
+  const data = await callBackend('add_coupon', { studentId: currentStudentId, code, type: 'qr' });
+  if (data && data.success) {
+    alert('쿠폰 등록 성공! 10포인트가 적립되었습니다.');
+    currentPoint += 10;
+    showPanel('mypage');
+    document.getElementById('coupon-code').value = '';
+  }
+}
+
+async function sendLetter() {
+  if (!currentStudentId) return showPanel('login');
+  const toId = document.getElementById('letter-to').value.trim();
+  const content = document.getElementById('letter-content').value.trim();
+  if (!toId || !content) return alert('받는 사람 학번과 편지 내용을 모두 입력하세요.');
+
+  const data = await callBackend('send_letter', { fromId: currentStudentId, toId, content });
+  if (data && data.success) {
+    alert('편지 전송 성공! 1000포인트가 적립되었습니다.');
+    currentPoint += 1000;
+    showPanel('mypage');
+    document.getElementById('letter-to').value = '';
+    document.getElementById('letter-content').value = '';
+  }
+}
+
+async function loadPortfolio() {
+  if (!currentStudentId) return showPanel('login');
+  const data = await callBackend('portfolio', { studentId: currentStudentId });
+  if (data && data.success) {
+    const p = data.data;
+    document.getElementById('portfolio-coupons').textContent = p.coupons || 0;
+    document.getElementById('portfolio-letters').textContent = p.letters || 0;
+    document.getElementById('portfolio-point').textContent = p.point || currentPoint; // 포트폴리오 시트에 포인트 없으면 현재 포인트
+    document.getElementById('portfolio-recent').textContent = p.recent || '-';
+  }
+}
+
+// 쇼핑 기능은 UI만 구현, 실제 결제는 백엔드 연동 필요
+function order() {
+  alert("현재 쇼핑 기능은 UI만 구현되어 있습니다. 백엔드 상품 목록 및 결제 API 연동이 필요합니다.");
+}
+
+// 페이지 로드 시 시작 화면 표시
+window.addEventListener('load', () => showPanel('landing'));
+
+</script>
 </body>
 </html>
