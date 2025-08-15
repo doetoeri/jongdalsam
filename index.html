@@ -3,27 +3,536 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>종달샘 포인트 샵</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css" />
+  <title>종달샘 종합 웹서비스</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <script src="https://unpkg.com/qrcode@1.4.4/build/qrcode.min.js"></script>
+  <style>
+    @font-face {
+      font-family: 'MoneygroRounded';
+      src: url('./MoneygroRounded.ttf') format('truetype');
+      font-display: swap;
+    }
+    body {
+      margin: 0;
+      background: #A9F5D0;
+      color: #009688;
+      font-family: 'MoneygroRounded', 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 95px;
+    }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 22px 4vw 0 4vw;
+      text-align: center;
+    }
+    .main-title {
+      margin: 24px 0 10px;
+      font-size: 2.08rem;
+      font-weight: 900;
+      color: #004D40;
+    }
+    .main-title span {
+      color: #FF6D1B;
+    }
+    .subtitle {
+      font-size: 1.12rem;
+      color: #009688;
+    }
+    .snack-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+      gap: 22px;
+      margin: 28px 0 19px 0;
+    }
+    .snack-card {
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 4px 20px #004d4017;
+      padding: 26px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      border: 2.5px solid #FF6D1B;
+      min-width: 0;
+      transition: box-shadow .17s;
+    }
+    .snack-card:hover {
+      box-shadow: 0 8px 32px #ff6d1b1f;
+    }
+    .notice {
+      margin-top: 5px;
+      font-weight: 700;
+      font-size: 0.96em;
+      background: #A9F5D0;
+      color: #FF6D1B;
+      border: 1.5px solid #FF6D1B;
+      border-radius: 14px;
+      padding: 7px;
+      text-align: center;
+    }
+    .footer {
+      background: #fff;
+      border-radius: 24px;
+      padding: 14px 0 15px;
+      text-align: center;
+      margin: 34px auto 0;
+      box-shadow: 0 2px 11px #004d400d;
+      border: 2px solid #FF6D1B;
+      max-width: 340px;
+    }
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 15px 0;
+      justify-content: center;
+    }
+    .menu button {
+      min-width: 120px;
+      background: #FF6D1B;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      margin: 0;
+      box-shadow: 0 2px 10px #ff6d1b19;
+      transition: background .14s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .menu button:disabled {
+      background: #bbb;
+    }
+    .menu button i {
+      font-size: 1.2em;
+      vertical-align: middle;
+    }
+    .card {
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 4px 20px #004d4017;
+      padding: 26px 18px;
+      margin: 22px auto 20px auto;
+      max-width: 95%;
+      position: relative;
+      border: 2.5px solid #FF6D1B;
+      text-align: center;
+    }
+    input, textarea, select {
+      width: 90%;
+      margin: 8px auto;
+      padding: 10px;
+      border-radius: 16px;
+      border: 2px solid #FF6D1B;
+      font-family: inherit;
+      font-size: 1em;
+    }
+    textarea {
+      min-height: 90px;
+    }
+    .btn-action {
+      background: #FF6D1B;
+      color: #fff;
+      border: none;
+      border-radius: 16px;
+      padding: 12px 25px;
+      font-size: 1.05em;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 10px #ff6d1b19;
+      transition: all .2s;
+      margin: 10px 0 4px 0;
+    }
+    .btn-action:hover {
+      background: #E65C00;
+    }
+    #qr-code {
+      margin: 15px auto;
+      width: 180px;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border-radius: 14px;
+      border: 2px solid #FF6D1B;
+    }
+    .hidden {
+      display: none;
+    }
+    .history-item {
+      background: #E8F5E9;
+      padding: 10px 15px;
+      margin: 8px 0;
+      border-radius: 12px;
+      font-size: 1em;
+    }
+    .cart-summary {
+      background: #fff;
+      border-radius: 24px;
+      padding: 14px 4vw;
+      margin: 16px 0 10px 0;
+      box-shadow: 0 3px 13px #00968813;
+      color: #004D40;
+      font-size: 1.13em;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      min-height: 44px;
+      text-align: center;
+      flex-direction: column;
+    }
+    .cart-summary .totalsum {
+      font-size: 1.19em;
+      color: #d32f2f;
+      font-weight: 900;
+      margin-left: 11px;
+    }
+    /* 반응형 */
+    @media (max-width:900px) { .container {max-width:99vw;} }
+    @media (max-width:600px) {
+      .main-title { font-size:1.3rem; }
+      .snack-list { grid-template-columns:1fr; gap:13px; margin:10px 0 15px 0; }
+      .card { padding:16px 3vw; margin:12px auto; }
+      .btn-action { width:90%; margin:10px auto; }
+      input, select, textarea { font-size:0.93em; width:95%; }
+      #qr-code { width:150px; height:150px; }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <div class="main-title"><span>종달샘</span> JongDalSam</div>
-    <div class="subtitle">중학교 친구들을 위한 포인트 쇼핑몰</div>
-    <br><br>
-    <div style="text-align:center;margin-top:60px;">
-      <p>이곳에서 쿠폰 등록, 포인트 적립, 상품 구매까지 가능합니다!</p>
-      <p>로그인 후 마이페이지를 확인하세요.</p>
-      <br>
-      <a href="login.html" style="background:#FF6D1B;color:white;font-size:1.3rem;font-family:MoneygroRounded,Arial;padding:14px 18px;border-radius:18px;border:none;text-decoration:none;">로그인하기</a>
-    </div>
-    <div class="footer">
-      <h3>궁금한 점이 있나요?</h3>
-      <div class="contact-info">
-        <div class="contact-item"><span class="material-icons">phone</span>010-1234-5678</div>
+
+    <!-- 0. 라이브러리 로딩 감지는 생략 (QRCode.js는 <head>에서 직접 로드) -->
+    
+    <!-- 1. 메인 인트로 -->
+    <div id="landing" class="card">
+      <div class="main-title"><span>종달샘</span> JongDalSam</div>
+      <div class="subtitle">학번과 비밀번호로 회원가입 후 체험하세요!</div>
+      <div class="menu">
+        <button onclick="showPanel('login')"><span class="material-icons">login</span> 로그인</button>
+        <button onclick="showPanel('signup')"><span class="material-icons">person_add_alt</span> 회원가입</button>
+      </div>
+      <div class="notice">
+        이 데모는 실시간 데이터 저장/조회가 가능합니다.<br>Google Apps Script와 연동되어 있습니다.
       </div>
     </div>
+
+    <!-- 2. 로그인 -->
+    <div id="login" class="card hidden">
+      <div class="main-title"><span>로그인</span></div>
+      <input type="text" id="login-id" placeholder="학번" required />
+      <input type="password" id="login-pw" placeholder="비밀번호" required />
+      <button class="btn-action" onclick="login()">로그인</button>
+      <button class="btn-action" onclick="showPanel('landing')">뒤로가기</button>
+    </div>
+
+    <!-- 3. 회원가입 -->
+    <div id="signup" class="card hidden">
+      <div class="main-title"><span>회원가입</span></div>
+      <input type="text" id="signup-id" placeholder="학번" required />
+      <input type="password" id="signup-pw" placeholder="비밀번호" required />
+      <button class="btn-action" onclick="signup()">가입하기</button>
+      <button class="btn-action" onclick="showPanel('landing')">뒤로가기</button>
+    </div>
+
+    <!-- 4. 로그인 후 마이페이지 -->
+    <div id="mypage" class="card hidden">
+      <div class="main-title"><span>마이페이지</span></div>
+      <p>학번: <span id="current-id"></span></p>
+      <p>포인트: <span id="current-point"></span></p>
+      <div class="menu">
+        <button onclick="showPanel('coupon')"><i class="material-icons">confirmation_number</i>쿠폰 등록</button>
+        <button onclick="showPanel('letter')"><i class="material-icons">email</i>편지 쓰기</button>
+        <button onclick="showPanel('portfolio')"><i class="material-icons">assignment</i>포트폴리오</button>
+        <button onclick="showPanel('shop')"><i class="material-icons">shopping_cart</i>장바구니</button>
+        <button onclick="showPanel('landing')"><i class="material-icons">logout</i>로그아웃</button>
+        <!-- 체험을 위한 임시 회원 전환 -->
+        <button onclick="becomeUser('30401')" style="background:#2196f3;">
+          <i class="material-icons">account_circle</i>30401 님 로그인(체험)
+        </button>
+        <button onclick="becomeUser('30211')" style="background:#9c27b0;">
+          <i class="material-icons">account_circle</i>30211 님 로그인(체험)
+        </button>
+      </div>
+    </div>
+
+    <!-- 5. 쿠폰 등록 -->
+    <div id="coupon" class="card hidden">
+      <div class="main-title"><span>쿠폰 등록</span></div>
+      <div id="qr-code"></div>
+      <input type="text" id="coupon-code" placeholder="쿠폰 번호 (12자리)" required />
+      <button class="btn-action" onclick="addCoupon()">쿠폰 등록하기</button>
+      <button class="btn-action" onclick="generateQR()">QR 코드 생성</button>
+      <button class="btn-action" onclick="showPanel('mypage')">뒤로가기</button>
+      <div class="notice">
+        쿠폰 등록 시 10포인트가 즉시 적립됩니다.
+      </div>
+    </div>
+
+    <!-- 6. 편지 보내기 -->
+    <div id="letter" class="card hidden">
+      <div class="main-title"><span>편지 쓰기</span></div>
+      <input type="text" id="letter-to" placeholder="받는 이 학번" required />
+      <textarea id="letter-content" placeholder="편지 내용을 입력하세요"></textarea>
+      <button class="btn-action" onclick="sendLetter()">편지 보내기</button>
+      <button class="btn-action" onclick="showPanel('mypage')">뒤로가기</button>
+      <div class="notice">
+        편지 1건당 5포인트가 차감됩니다.
+      </div>
+    </div>
+
+    <!-- 7. 포트폴리오 -->
+    <div id="portfolio" class="card hidden">
+      <div class="main-title"><span>포트폴리오</span></div>
+      <div class="history-item">
+        <span class="material-icons">people</span> <b>쿠폰 교환</b> <span id="portfolio-coupons">0</span>회
+      </div>
+      <div class="history-item">
+        <span class="material-icons">email</span> <b>편지 교환</b> <span id="portfolio-letters">0</span>회
+      </div>
+      <div class="history-item">
+        <span class="material-icons">monetization_on</span> <b>누적 포인트</b> <span id="portfolio-point">0</span>점
+      </div>
+      <div class="history-item">
+        <span class="material-icons">event</span> <b>최근 활동</b> <span id="portfolio-recent">-</span>
+      </div>
+      <button class="btn-action" onclick="showPanel('mypage')">뒤로가기</button>
+    </div>
+
+    <!-- 8. 쇼핑(상품 예약/구매) -->
+    <div id="shop" class="card hidden">
+      <div class="main-title"><span>장바구니 (포인트 사용)</span></div>
+      <div class="subtitle">로그인이 필요하며, 포인트로 결제합니다.</div>
+      <div class="snack-list" id="snack-list">
+        <!-- 기본 예시 간식 메뉴 -->
+        <div class="snack-card">
+          <div class="snack-name">담요</div>
+          <div class="snack-price">1000점</div>
+          <div class="snack-stock">잔여: 5개</div>
+          <button class="snack-btn" onclick="addCart('담요')">+</button>
+        </div>
+        <div class="snack-card">
+          <div class="snack-name">도리토스</div>
+          <div class="snack-price">800점</div>
+          <div class="snack-stock">잔여: 10개</div>
+          <button class="snack-btn" onclick="addCart('도리토스')">+</button>
+        </div>
+      </div>
+      <div class="cart-summary" id="cart-summary">카트가 비어 있습니다.</div>
+      <button class="btn-cart-order" id="order-btn" disabled>예약하기</button>
+      <button class="btn-action" onclick="showPanel('mypage')">뒤로가기</button>
+      <div class="notice">포인트로 결제, 환불 불가</div>
+    </div>
+
+    <!-- 9. 푸터 -->
+    <div class="footer">
+      <h3>학내 종달샘 아지트</h3>
+      <div class="contact-info">테스트용 Google Apps Script 연동 데모</div>
+    </div>
   </div>
+
+<script>
+// 1. 백엔드 URL (당신의 Apps Script 배포 URL을 여기에 넣으세요!)
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbylztEZlBlDUVlOYJbg6mTxRVqQ7QtvOFj03tVje6zDpE8pbBVA-SOF-b4UFb9XE2rd/exec";
+
+// 2. 현재 사용자 정보 (세션)
+let currentStudentId = null;
+let currentPoint = 0;
+let cart = {};
+
+// 3. 패널 보기/숨김 처리
+function showPanel(panelName) {
+  document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
+  document.getElementById(panelName).classList.remove('hidden');
+  if (panelName === 'mypage') refreshMyPage();
+  else if (panelName === 'portfolio') loadPortfolio();
+  else if (panelName === 'shop') renderShop();
+}
+
+// 4. 회원가입
+function signup() {
+  const id = document.getElementById('signup-id').value.trim();
+  const pw = document.getElementById('signup-pw').value.trim();
+  if (!id || !pw) return alert('학번과 비밀번호를 입력하세요');
+  fetch(WEBAPP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'signup', studentId: id, password: pw })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('회원가입 완료! 로그인해 주세요.');
+      showPanel('login');
+    } else alert('회원가입 실패: ' + (data.message || data.error));
+  })
+  .catch(e => alert('오류: ' + e));
+}
+
+// 5. 로그인
+function login() {
+  const id = document.getElementById('login-id').value.trim();
+  const pw = document.getElementById('login-pw').value.trim();
+  if (!id || !pw) return alert('학번과 비밀번호를 입력하세요');
+  fetch(WEBAPP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'login', studentId: id, password: pw })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      currentStudentId = id;
+      currentPoint = data.data.point;
+      refreshMyPage();
+      showPanel('mypage');
+    } else alert('로그인 실패: ' + (data.message || data.error));
+  })
+  .catch(e => alert('오류: ' + e));
+}
+
+// 체험을 위한 임시 로그인
+function becomeUser(id) {
+  currentStudentId = id;
+  currentPoint = 100;
+  refreshMyPage();
+  showPanel('mypage');
+  alert(id + ' 님(체험 계정)으로 로그인했습니다.');
+}
+
+// 마이페이지 새로고침
+function refreshMyPage() {
+  if (!currentStudentId) return;
+  document.getElementById('current-id').textContent = currentStudentId;
+  document.getElementById('current-point').textContent = currentPoint;
+}
+
+// 6. 쿠폰 등록
+let qrCodeCurrent = '';
+function generateQR() {
+  qrCodeCurrent = Math.random().toString(36).substring(2, 14).toUpperCase();
+  document.getElementById('qr-code').innerHTML = '';
+  new QRCode(document.getElementById('qr-code'), qrCodeCurrent);
+  document.getElementById('coupon-code').value = qrCodeCurrent;
+}
+
+function addCoupon() {
+  if (!currentStudentId) return showPanel('login');
+  const code = document.getElementById('coupon-code').value.trim();
+  if (!code) return alert('쿠폰 번호를 입력하세요');
+  fetch(WEBAPP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'add_coupon', studentId: currentStudentId, code: code, type: 'qr', pairId: '' })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('쿠폰 등록 성공! 10포인트 적립');
+      currentPoint += 10;
+      refreshMyPage();
+      showPanel('mypage');
+    } else alert('쿠폰 등록 실패: ' + (data.message || data.error));
+  })
+  .catch(e => alert('오류: ' + e));
+}
+
+// 7. 편지 보내기
+function sendLetter() {
+  if (!currentStudentId) return showPanel('login');
+  const toId = document.getElementById('letter-to').value.trim();
+  const content = document.getElementById('letter-content').value.trim();
+  if (!toId || !content) return alert('받는 학번과 내용을 입력하세요');
+  fetch(WEBAPP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'send_letter', fromId: currentStudentId, toId: toId, content: content })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('편지 전송 성공!');
+      currentPoint -= 5;
+      refreshMyPage();
+      document.getElementById('letter-content').value = '';
+      showPanel('mypage');
+    } else alert('편지 전송 실패: ' + (data.message || data.error));
+  })
+  .catch(e => alert('오류: ' + e));
+}
+
+// 8. 포트폴리오 로드
+function loadPortfolio() {
+  if (!currentStudentId) return showPanel('login');
+  fetch(WEBAPP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'portfolio', studentId: currentStudentId })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('portfolio-coupons').textContent = data.data.coupons || 0;
+      document.getElementById('portfolio-letters').textContent = data.data.letters || 0;
+      document.getElementById('portfolio-point').textContent = data.data.point || 0;
+      document.getElementById('portfolio-recent').textContent = data.data.recent || '-';
+    } else alert('포트폴리오 불러오기 실패: ' + (data.message || data.error));
+  })
+  .catch(e => alert('오류: ' + e));
+}
+
+// 9. 장바구니 (간단 구현)
+function renderShop() {
+  if (!currentStudentId) return showPanel('login');
+  refreshMyPage();
+  // 실제 상품 데이터는 Apps Script에서 불러와야 하며, 여기선 하드코딩 예시
+}
+
+function addCart(itemName) {
+  cart[itemName] = (cart[itemName] || 0) + 1;
+  updateCart();
+}
+
+function updateCart() {
+  const cartEl = document.getElementById('cart-summary');
+  const items = Object.entries(cart).filter(([name, qty]) => qty > 0);
+  if (items.length === 0) {
+    cartEl.innerHTML = '장바구니가 비어 있습니다.';
+    document.getElementById('order-btn').disabled = true;
+  } else {
+    cartEl.innerHTML = items.map(([name, qty]) => `${name} × ${qty}`).join(', ');
+    document.getElementById('order-btn').disabled = false;
+  }
+}
+
+// 10. 결제(포인트 사용)
+// 실제로는 Apps Script 연동 필요, 여기선 점수 차감 및 확인만
+document.getElementById('order-btn').addEventListener('click', function() {
+  if (!currentStudentId) return showPanel('login');
+  const total = Object.entries(cart).reduce((sum, [name, qty]) => 
+    sum + qty * (name === '담요' ? 1000 : 800), 0);
+  if (currentPoint < total) return alert('포인트가 부족합니다.');
+  if (confirm(`총 ${total}포인트를 사용하여 결제하시겠습니까?`)) {
+    // 실제 API 호출이 필요한 곳 (여기선 시뮬레이션)
+    alert('구매 완료! (실제로는 Apps Script에 주문 내역 전송 필요)');
+    currentPoint -= total;
+    cart = {};
+    updateCart();
+    refreshMyPage();
+  }
+});
+
+// 11. 페이지 진입 시
+window.addEventListener('load', () => showPanel('landing'));
+</script>
 </body>
 </html>
